@@ -53,7 +53,7 @@ st.markdown("### Select the PS5 version you bought :")
 st.caption("(You can select only one option)")
 console_choice = st.selectbox(
     "",
-    options=list(consoles.keys())
+    options=list(consoles.keys()),
     label_visibility="collapsed"
 )
 
