@@ -106,7 +106,6 @@ if show_physical:
     physical_choices = st.multiselect(
         "",
         options=list(games.keys()),
-        label_visibility="collapsed"
     )
 
 # 5. Subscription Selection
