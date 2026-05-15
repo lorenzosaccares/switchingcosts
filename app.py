@@ -105,7 +105,7 @@ if show_physical:
     st.caption("(You can select multiple options)")
     physical_choices = st.multiselect(
         "",
-        options=list(games.keys()),
+        options=list(games.keys())
     )
 
 # 5. Subscription Selection
