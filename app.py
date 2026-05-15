@@ -100,14 +100,14 @@ if console_choice == "PS5 Digital - € 399.99":
 # Mostra il selettore fisico solo se le condizioni sono soddisfatte
 physical_choices = []
 if show_physical:
-    st.markdown("### Select the videogames you bought on the Digital Store :")
+    st.markdown("### Select the videogames you bought on physical version and you are gonna re-sell :")
+    st.markdown("**You can only select this option if your console has the Blu-Ray Player**")
     st.caption("(You can select multiple options)")
-    digital_choices = st.multiselect(
+    physical_choices = st.multiselect(
         "",
         options=list(games.keys()),
         label_visibility="collapsed"
     )
-
 
 # 5. Subscription Selection
 st.caption("(You can select only one option)")
