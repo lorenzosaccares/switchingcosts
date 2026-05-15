@@ -1,7 +1,6 @@
 import streamlit as st
 
 # --- Data Dictionaries ---
-# Storing the exact options and their corresponding float prices for calculation
 consoles = {
     "PS5 Standard - € 499.99": 499.99,
     "PS5 Digital - € 399.99": 399.99,
@@ -14,8 +13,8 @@ accessories = {
     "Blu-Ray player - € 119.99": 119.99,
     "PS Controller - € 79.99": 79.99,
     "PlayStation Portal Remote Player - € 249.99": 249.99,
-    "PULSE Wireless Headset - € 219.99": 219.99, # Translated "Auricolari"
-    "PULSE Elite Wireless Headset - € 149.99": 149.99 # Translated "Auricolari"
+    "PULSE Wireless Headset - € 219.99": 219.99,
+    "PULSE Elite Wireless Headset - € 149.99": 149.99
 }
 
 games = {
@@ -32,7 +31,6 @@ games = {
     "Hollow Knight: Silksong - € 19.99": 19.99,
     "DEATH STRANDING 2 - € 79.99": 79.99,
     "Red Dead Redemption 2 - € 59.99": 59.99,
-    # Added a few extra famous PS5 titles
     "Horizon Forbidden West - € 79.99": 79.99,
     "Gran Turismo 7 - € 79.99": 79.99,
     "Demon's Souls - € 79.99": 79.99
@@ -47,25 +45,28 @@ subscriptions = {
 
 # --- UI Layout ---
 st.title("Switching Costs Calculator for a PS5 user")
+st.divider()
 
 # 1. Console Selection
 st.markdown("### Select the PS5 version you bought :")
 st.caption("(You can select only one option)")
 console_choice = st.selectbox(
-    "",
+    "console_sel", 
     options=list(consoles.keys()),
-    label_visibility="collapsed"
+    label_visibility="collapsed",
+    key="unique_console_key"
 )
 
-st.write("") # Spazio vuoto per pulizia visiva
+st.write("") 
 
 # 2. Accessories Selection
 st.markdown("### Select the accessories you bought :")
 st.caption("(You can select multiple options)")
 acc_choices = st.multiselect(
-    "",
+    "acc_sel",
     options=list(accessories.keys()),
-    label_visibility="collapsed"
+    label_visibility="collapsed",
+    key="unique_acc_key"
 )
 
 st.write("")
@@ -74,48 +75,48 @@ st.write("")
 st.markdown("### Select the videogames you bought on the Digital Store :")
 st.caption("(You can select multiple options)")
 digital_choices = st.multiselect(
-    "",
+    "digital_sel",
     options=list(games.keys()),
-    label_visibility="collapsed"
+    label_visibility="collapsed",
+    key="unique_digital_key"
 )
 
 st.write("")
 
 # 4. Physical Games Selection (Conditional Logic)
 show_physical = False
-
-# Condition 1: Picked a disc-drive console
 if console_choice in ["PS5 Standard - € 499.99", "PS5 Slim Standard - € 549.99", "PS5 Pro - € 799.99"]:
     show_physical = True
 
-# Condition 2: Picked the external Blu-Ray player accessory
 for acc in acc_choices:
     if "Blu-Ray player" in acc:
         show_physical = True
 
-# Condizione 3: Override Assoluto (La PS5 Digital originale non supporta il lettore)
+# Absolute override for original Digital edition
 if console_choice == "PS5 Digital - € 399.99":
     show_physical = False
 
-# Mostra il selettore fisico solo se le condizioni sono soddisfatte
 physical_choices = []
 if show_physical:
     st.markdown("### Select the videogames you bought on physical version and you are gonna re-sell :")
     st.markdown("**You can only select this option if your console has the Blu-Ray Player**")
     st.caption("(You can select multiple options)")
     physical_choices = st.multiselect(
-        "",
+        "physical_sel",
         options=list(games.keys()),
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key="unique_physical_key"
     )
+    st.write("")
 
 # 5. Subscription Selection
 st.markdown("### Select the type of active subscription at the moment of changing asset:")
 st.caption("(You can select only one option)")
 sub_choice = st.selectbox(
-    "Select Subscription Type", # Nome interno (verrà nascosto)
+    "sub_sel",
     options=list(subscriptions.keys()),
-    label_visibility="collapsed" # Questo risolve il problema visivo e di ID
+    label_visibility="collapsed",
+    key="unique_sub_key"
 )
 
 st.write("")
@@ -124,9 +125,10 @@ st.write("")
 st.markdown("### Months of subscription remaining at the moment of changing asset:")
 st.caption("(Select a value from 0 to 12)")
 months_remaining = st.slider(
-    "Remaining Months", # Nome interno (verrà nascosto)
+    "slider_sel",
     min_value=0, max_value=12, value=0, step=1,
-    label_visibility="collapsed" # Questo risolve il problema visivo e di ID
+    label_visibility="collapsed",
+    key="unique_slider_key"
 )
 
 st.divider()
@@ -136,20 +138,16 @@ console_cost = consoles[console_choice]
 acc_cost_sum = sum(accessories[a] for a in acc_choices)
 digital_games_sum = sum(games[g] for g in digital_choices)
 
-# Variable X Logic
 X = 0.0
 if show_physical:
     X = 0.7 * sum(games[g] for g in physical_choices)
 
-# Variable Y Logic
-# Usiamo il valore corrispondente al tipo di abbonamento scelto
 Y = subscriptions[sub_choice] * months_remaining
 
-# Final Total Formula
 total_switching_cost = 499.99 + (0.6 * console_cost) + (0.7 * acc_cost_sum) + digital_games_sum + X + Y
 
-# --- Final Display Result (Centered and Big as requested) ---
-st.markdown("## The switching costs that would be incurred in the event of an asset change, would be:")
+# --- Final Display Result ---
+st.markdown("## The switching costs that would be incurred in the event of an asset change, would be :")
 st.markdown(
     f"<h1 style='text-align: center; font-size: 3.5rem; color: #ff4b4b;'>€ {total_switching_cost:.2f}</h1>", 
     unsafe_allow_html=True
@@ -157,7 +155,7 @@ st.markdown(
 
 st.divider()
 
-# --- Display Disclaimers (Less prominent at the bottom) ---
+# --- Display Disclaimers ---
 st.caption("**Calculation Specifications:**")
 st.caption("""
 - Standard non-discounted prices from the official PlayStation site (05/26) have been reported.
