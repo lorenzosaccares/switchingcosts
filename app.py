@@ -37,14 +37,15 @@ games = {
 }
 
 subscriptions = {
-    "Essential": 8.99,
-    "Extra": 13.99,
-    "Premium": 16.99,
+    "Essential - € 8.99/month": 8.99,
+    "Extra - € 13.99/month": 13.99,
+    "Premium - € 16.99/month": 16.99,
     "None": 0.00
 }
 
 # --- UI Layout ---
 st.title("Switching Costs Calculator for a PS5 user")
+st.markdown("#### Who chooses tho change their PS5 for a € 499.99 Xbox Series X")
 st.divider()
 
 # 1. Console Selection
