@@ -45,7 +45,7 @@ subscriptions = {
 
 # --- UI Layout ---
 st.title("Switching Costs Calculator for a PS5 user")
-st.markdown("#### Who chooses tho change their PS5 for a € 499.99 Xbox Series X")
+st.markdown("#### who decides to swap their PS5 for a Xbox Series X costing € 499.99")
 st.divider()
 
 # 1. Console Selection
