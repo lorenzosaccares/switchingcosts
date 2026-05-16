@@ -3,23 +3,102 @@ import base64
 import os
 
 # --- Page Config ---
-st.set_page_config(page_title="Switching Costs Calculator", page_icon="ps_logo.png")
+st.set_page_config(page_title="Switching Costs Calculator", page_icon="ps_logo.png", layout="centered")
 
-# --- Funzione per il Logo Dinamico (CSS Mask) ---
-def get_dynamic_logo_html(image_path):
+# --- Iniezione CSS per Forzare la Dark Mode e i Colori Personalizzati ---
+st.markdown("""
+    <style>
+    /* 1. FORZATURA MODALITÀ SCURA PERENNE (Sfondo e testi base) */
+    .stApp {
+        background-color: #121212 !important;
+    }
+    
+    html, body, [class*="css"], .stMarkdown, p, span, label {
+        color: #f1f1f1 !important;
+    }
+    
+    /* Forzatura colore dei titoli in bianco fumo (visto che è sempre Dark Mode) */
+    h1, h2, h3, h4, h5 {
+        color: #f1f1f1 !important;
+    }
+    
+    /* Linea di divisione Oro */
+    hr {
+        border-bottom-color: #fcbf00 !important;
+        border-bottom-width: 3px !important;
+    }
+
+    /* 2. PERSONALIZZAZIONE WIDGET IN ORO (#fcbf00) */
+    /* Colore del testo dentro i selettori e menu a tendina */
+    div[data-baseweb="select"] * {
+        color: #f1f1f1 !important;
+    }
+    
+    /* Riquadri delle opzioni selezionate nel multiselect (Stonks!) */
+    span[data-baseweb="tag"] {
+        background-color: #fcbf00 !important;
+        color: #121212 !important; /* Testo scuro dentro il tag oro per leggibilità */
+    }
+    
+    /* Icona di chiusura (X) dentro i tag del multiselect */
+    span[data-baseweb="tag"] role[button] {
+        color: #121212 !important;
+    }
+    
+    /* Bordo dei selettori quando sono attivi/focalizzati */
+    div[data-baseweb="select"] > div:focus-within {
+        border-color: #fcbf00 !important;
+    }
+    
+    /* Colore dello Slider (Barra passata e Pallino del cursore) */
+    div[data-testid="stSlider"] div[role="slider"] {
+        background-color: #fcbf00 !important;
+        border-color: #fcbf00 !important;
+    }
+    div[data-testid="stSlider"] div[aria-valuenow] {
+        background-color: #fcbf00 !important;
+    }
+
+    /* Scritta di avviso dinamica per i giochi fisici */
+    .dynamic-warning {
+        color: #f1f1f1 !important;
+        font-weight: bold;
+    }
+
+    /* 3. RIQUADRO RISULTATO FINALE AGGIORNATO (Più grande, No ombra) */
+    .result-box {
+        background-color: #2c2c2c; 
+        padding: 35px; 
+        border-radius: 15px; 
+        border: 4px solid #fcbf00; 
+        text-align: center; 
+        box-shadow: 0px 10px 20px rgba(0,0,0,0.5);
+        margin-top: 25px;
+        margin-bottom: 25px;
+    }
+    .result-number {
+        font-size: 4.5rem; /* Ingrandito da 3.5rem a 4.5rem */
+        color: #fcbf00 !important; 
+        margin: 0; 
+        font-weight: bold;
+        text-shadow: none !important; /* Rimossa completamente l'ombreggiatura */
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- Funzione per il Logo (Sempre Bianco Fumo visto che è solo Dark Mode) ---
+def get_logo_html(image_path):
     if os.path.exists(image_path):
         with open(image_path, "rb") as f:
             encoded = base64.b64encode(f.read()).decode("utf-8")
-        
-        # Usa l'immagine come maschera. Il colore viene dato dal background-color
         return f"""
         <style>
-        .dynamic-logo {{
+        .static-logo {{
             width: 100%;
             max-width: 250px;
             height: 180px;
             margin: 0 auto;
-            background-color: #0101ba; /* Colore in modalità chiara */
+            background-color: #f1f1f1; /* Sempre bianco fumo */
             mask-image: url(data:image/png;base64,{encoded});
             -webkit-mask-image: url(data:image/png;base64,{encoded});
             mask-size: contain;
@@ -29,68 +108,15 @@ def get_dynamic_logo_html(image_path):
             mask-position: center;
             -webkit-mask-position: center;
         }}
-        @media (prefers-color-scheme: dark) {{
-            .dynamic-logo {{
-                background-color: #f1f1f1 !important; /* Colore in modalità scura */
-            }}
-        }}
         </style>
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-            <div class="dynamic-logo"></div>
+            <div class="static-logo"></div>
         </div>
         """
     return ""
 
-# --- Iniezione CSS Dinamico per i Testi ---
-st.markdown("""
-    <style>
-    /* Colori di default (Modalità Chiara) */
-    h1, h2, h3, h4, h5 {
-        color: #0101ba !important;
-    }
-    
-    .dynamic-warning {
-        color: #0101ba;
-        font-weight: bold;
-    }
-    
-    hr {
-        border-bottom-color: #fcbf00 !important;
-        border-bottom-width: 3px !important;
-    }
-    
-    /* Configurazione Riquadro Finale (colori invariati per far risaltare il riquadro) */
-    .result-box {
-        background-color: #2c2c2c; 
-        padding: 30px; 
-        border-radius: 15px; 
-        border: 4px solid #fcbf00; 
-        text-align: center; 
-        box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-    .result-number {
-        font-size: 3.5rem; 
-        color: #fcbf00 !important; 
-        margin: 0; 
-        text-shadow: 2px 2px #0101ba;
-    }
-
-    /* Modalità Scura (Applica il colore #f1f1f1 se il browser è in Dark Mode) */
-    @media (prefers-color-scheme: dark) {
-        h1, h2, h3, h4, h5 {
-            color: #f1f1f1 !important;
-        }
-        .dynamic-warning {
-            color: #f1f1f1 !important;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# Renderizza il logo dinamico usando l'immagine caricata
-st.markdown(get_dynamic_logo_html("ps_logo.png"), unsafe_allow_html=True)
+# Renderizza il logo
+st.markdown(get_logo_html("ps_logo.png"), unsafe_allow_html=True)
 
 # --- Data Dictionaries ---
 consoles = {
@@ -242,7 +268,6 @@ total_switching_cost = 499.99 + (0.6 * console_cost) + (0.7 * acc_cost_sum) + di
 # --- Final Display Result ---
 st.markdown("## The switching costs that would be incurred in the event of an asset change, would be :")
 
-# Riquadro personalizzato usando la classe CSS .result-box 
 st.markdown(
     f"""
     <div class="result-box">
