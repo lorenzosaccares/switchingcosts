@@ -1,5 +1,40 @@
 import streamlit as st
 
+# --- Page Config & Custom CSS ---
+# Imposta la configurazione base della pagina
+st.set_page_config(page_title="Switching Costs Calculator", page_icon="🎮")
+
+# Iniezione del CSS personalizzato per i colori richiesti
+st.markdown("""
+    <style>
+    /* Colore testo principale */
+    html, body, [class*="css"]  {
+        color: #2c2c2c;
+    }
+    
+    /* Colore primario per i titoli (Blu PlayStation) */
+    h1, h2, h3 {
+        color: #0101ba !important;
+    }
+    
+    /* Colore secondario per i divisori (Giallo/Oro) */
+    hr {
+        border-bottom-color: #fcbf00 !important;
+        border-bottom-width: 3px !important;
+    }
+    
+    /* Stile per i messaggi di avviso/caption */
+    .st-emotion-cache-1y4p8pa {
+        color: #0101ba;
+        font-weight: 500;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- Banner Image ---
+# Immagine di repertorio a tema PS5 da Unsplash (gratuita e sicura)
+st.image("https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=2000&auto=format&fit=crop", use_column_width=True)
+
 # --- Data Dictionaries ---
 consoles = {
     "PS5 Standard - € 499.99": 499.99,
@@ -45,11 +80,11 @@ subscriptions = {
 
 # --- UI Layout ---
 st.title("Switching Costs Calculator for a PS5 user")
-st.markdown("##### who decides to swap their PS5 for a Xbox Series X costing € 499.99")
+st.markdown("##### *...who decides to swap their PS5 for an Xbox Series X costing € 499.99*")
 st.divider()
 
 # 1. Console Selection
-st.markdown("### Select the PS5 version you bought :")
+st.markdown("### 🎮 Select the PS5 version you bought :")
 st.caption("(You can select only one option)")
 console_choice = st.selectbox(
     "console_sel", 
@@ -61,7 +96,7 @@ console_choice = st.selectbox(
 st.write("") 
 
 # 2. Accessories Selection
-st.markdown("### Select the accessories you bought :")
+st.markdown("### 🎧 Select the accessories you bought :")
 st.caption("(You can select multiple options)")
 acc_choices = st.multiselect(
     "acc_sel",
@@ -73,7 +108,7 @@ acc_choices = st.multiselect(
 st.write("")
 
 # 3. Digital Games Selection
-st.markdown("### Select the videogames you bought on the Digital Store :")
+st.markdown("### 🛒 Select the videogames you bought on the Digital Store :")
 st.caption("(You can select multiple options)")
 digital_choices = st.multiselect(
     "digital_sel",
@@ -99,8 +134,8 @@ if console_choice == "PS5 Digital - € 399.99":
 
 physical_choices = []
 if show_physical:
-    st.markdown("### Select the videogames you bought on physical version and you are gonna re-sell :")
-    st.markdown("**You can only select this option if your console has the Blu-Ray Player**")
+    st.markdown("### 💿 Select the videogames you bought on physical version and you are gonna re-sell :")
+    st.markdown(f"<span style='color: #0101ba; font-weight: bold;'>**You can only select this option if your console has the Blu-Ray Player**</span>", unsafe_allow_html=True)
     st.caption("(You can select multiple options)")
     physical_choices = st.multiselect(
         "physical_sel",
@@ -111,7 +146,7 @@ if show_physical:
     st.write("")
 
 # 5. Subscription Selection
-st.markdown("### Select the type of active subscription at the moment of changing asset:")
+st.markdown("### 💳 Select the type of active subscription at the moment of changing asset:")
 st.caption("(You can select only one option)")
 sub_choice = st.selectbox(
     "sub_sel",
@@ -123,7 +158,7 @@ sub_choice = st.selectbox(
 st.write("")
 
 # 6. Subscription Months Remaining Slider
-st.markdown("### Months of subscription remaining at the moment of changing asset:")
+st.markdown("### ⏳ Months of subscription remaining at the moment of changing asset:")
 st.caption("(Select a value from 0 to 12)")
 months_remaining = st.slider(
     "slider_sel",
@@ -149,8 +184,24 @@ total_switching_cost = 499.99 + (0.6 * console_cost) + (0.7 * acc_cost_sum) + di
 
 # --- Final Display Result ---
 st.markdown("## The switching costs that would be incurred in the event of an asset change, would be :")
+
+# Riquadro personalizzato per il risultato finale usando i tuoi tre colori
 st.markdown(
-    f"<h1 style='text-align: center; font-size: 3.5rem; color: #ff4b4b;'>€ {total_switching_cost:.2f}</h1>", 
+    f"""
+    <div style="
+        background-color: #2c2c2c; 
+        padding: 30px; 
+        border-radius: 15px; 
+        border: 4px solid #fcbf00; 
+        text-align: center; 
+        box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+        margin-top: 20px;
+        margin-bottom: 20px;">
+        <h1 style='font-size: 4rem; color: #fcbf00 !important; margin: 0; text-shadow: 2px 2px #0101ba;'>
+            € {total_switching_cost:.2f}
+        </h1>
+    </div>
+    """, 
     unsafe_allow_html=True
 )
 
